@@ -68,6 +68,11 @@ class ServiceTests(unittest.TestCase):
         self.assertTrue(second["duplicate"])
         self.assertEqual(second["spent"]["today_usd"], 0.25)
 
+    def test_record_requires_idempotency_key(self):
+        result = json.loads(self.service.tool_record(self.args))
+        self.assertFalse(result["ok"])
+        self.assertEqual(result["error"], "idempotency_key_required")
+
     def test_record_requires_approval(self):
         args = dict(self.args, amount_usd=0.75, payment_id="pay-2")
         result = json.loads(self.service.tool_record(args))

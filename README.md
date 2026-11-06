@@ -148,7 +148,7 @@ It can also inspect an already-signed `X-PAYMENT` payload and refuse an expired 
 
 ## The ledger
 
-All state is local, in `$HERMES_HOME/plugin-data/spendwarden/ledger.db`:
+All state is local, in `$HERMES_HOME/plugin-data/spendwarden/ledger.db` (SQLite, DELETE journal):
 
 - `entries` — one row per recorded payment. Amounts are integer micro-USD. `payment_id` is unique, which is the idempotency guarantee.
 - `events` — every check, block, approval, and x402 inspection, with reasons and a receipt code.

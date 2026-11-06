@@ -3,7 +3,9 @@
 One file, two tables: ``entries`` is the spend ledger; ``events`` is the
 decision log (checks, blocks, approvals, x402 inspections). Amounts are
 integer micro-USD. Every write is its own short transaction so the plugin is
-safe to call from the agent loop and from a hook.
+safe to call from the agent loop and from a hook. The journal uses DELETE
+rather than WAL: Hermes may run against a SQLite build with the WAL-reset
+corruption bug, and this database is small enough that DELETE is plenty.
 """
 
 from __future__ import annotations
@@ -75,7 +77,7 @@ class Ledger:
     def _connect(self) -> sqlite3.Connection:
         conn = sqlite3.connect(self.path, timeout=5.0)
         conn.row_factory = sqlite3.Row
-        conn.execute("PRAGMA journal_mode=WAL")
+        conn.execute("PRAGMA journal_mode=DELETE")
         conn.execute("PRAGMA busy_timeout=5000")
         return conn
 

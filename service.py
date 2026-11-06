@@ -203,6 +203,15 @@ class SpendWarden:
                     ensure_ascii=False,
                 )
             payment_id = str(args.get("payment_id") or args.get("tx_hash") or "").strip()
+            if not payment_id:
+                return json.dumps(
+                    {
+                        "ok": False,
+                        "error": "idempotency_key_required",
+                        "message": "Provide payment_id or tx_hash so a retry cannot double-count this payment.",
+                    },
+                    ensure_ascii=False,
+                )
             entry = Entry(
                 amount_micro=to_micro(intent.amount_usd),
                 asset=intent.asset,
