@@ -168,35 +168,6 @@ class SpendWarden:
             intent = self._intent_from_args(args, tool_name="spend_record")
             decision, policy, today, month = self._evaluate(intent)
             approved = bool(args.get("approved"))
-            if decision.action == "block":
-                self.ledger.record_event(
-                    kind="record",
-                    action="block",
-                    receipt=decision.receipt,
-                    amount_micro=to_micro(intent.amount_usd) if intent.amount_usd else None,
-                    asset=intent.asset,
-                    network=intent.network,
-                    recipient=intent.recipient,
-                    tool_name="spend_record",
-                    session_id=str(kwargs.get("session_id") or ""),
-                    task_id=str(kwargs.get("task_id") or ""),
-                    reasons=decision.reasons,
-                )
-                return json.dumps(
-                    {"ok": False, "error": "blocked", "decision": decision.to_dict(), "message": self.describe(intent, decision, policy)},
-                    ensure_ascii=False,
-                )
-            if decision.action == "ask" and not approved:
-                return json.dumps(
-                    {
-                        "ok": False,
-                        "error": "approval_required",
-                        "decision": decision.to_dict(),
-                        "message": self.describe(intent, decision, policy)
-                        + " Call again with approved=true only after a human confirms.",
-                    },
-                    ensure_ascii=False,
-                )
             if intent.amount_usd is None:
                 return json.dumps(
                     {"ok": False, "error": "unpriced", "message": "A spend record needs a USD amount."},
@@ -212,6 +183,17 @@ class SpendWarden:
                     },
                     ensure_ascii=False,
                 )
+
+            if decision.action == "block":
+                status = "over_budget"
+                warning = "recorded despite a policy block: " + "; ".join(decision.reasons)
+            elif decision.action == "ask" and not approved:
+                status = "unapproved"
+                warning = "recorded without approval: " + "; ".join(decision.reasons)
+            else:
+                status = "spent"
+                warning = ""
+
             entry = Entry(
                 amount_micro=to_micro(intent.amount_usd),
                 asset=intent.asset,
@@ -226,15 +208,18 @@ class SpendWarden:
                 metadata={
                     "approved": approved,
                     "decision_receipt": decision.receipt,
+                    "policy_action": decision.action,
+                    "policy_reasons": decision.reasons,
                     "source": intent.source,
                 },
+                status=status,
             )
             row, duplicate = self.ledger.record_spend(entry)
             today_after = self.ledger.spent_since(period_start("today"))
             month_after = self.ledger.spent_since(period_start("month"))
             self.ledger.record_event(
                 kind="record",
-                action="allow",
+                action=decision.action,
                 receipt=decision.receipt,
                 amount_micro=entry.amount_micro,
                 asset=entry.asset,
@@ -243,13 +228,16 @@ class SpendWarden:
                 tool_name="spend_record",
                 session_id=entry.session_id,
                 task_id=entry.task_id,
-                reasons=["recorded"],
-                metadata={"payment_id": payment_id, "tx_hash": entry.tx_hash, "duplicate": duplicate},
+                reasons=[status, *decision.reasons],
+                metadata={"payment_id": payment_id, "tx_hash": entry.tx_hash, "duplicate": duplicate, "status": status},
             )
             return json.dumps(
                 {
                     "ok": True,
                     "duplicate": duplicate,
+                    "status": row.get("status", status),
+                    "warning": warning,
+                    "decision": decision.to_dict(),
                     "entry": row,
                     "receipt": decision.receipt,
                     "spent": {"today_usd": _money(today_after), "month_usd": _money(month_after)},

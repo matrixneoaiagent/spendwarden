@@ -126,7 +126,7 @@ class Ledger:
         with self._connect() as conn:
             row = conn.execute(
                 "SELECT COALESCE(SUM(amount_micro), 0) AS total FROM entries "
-                "WHERE status = 'spent' AND created_at >= ?",
+                "WHERE status IN ('spent', 'over_budget', 'unapproved') AND created_at >= ?",
                 (start_iso,),
             ).fetchone()
             return int(row["total"] or 0)
@@ -234,12 +234,12 @@ class Ledger:
         with self._connect() as conn:
             total = conn.execute(
                 "SELECT COALESCE(SUM(amount_micro), 0) AS total, COUNT(*) AS count "
-                "FROM entries WHERE status = 'spent' AND created_at >= ?",
+                "FROM entries WHERE status IN ('spent', 'over_budget', 'unapproved') AND created_at >= ?",
                 (start,),
             ).fetchone()
             top = conn.execute(
                 "SELECT recipient, COUNT(*) AS count, COALESCE(SUM(amount_micro), 0) AS total "
-                "FROM entries WHERE status = 'spent' AND created_at >= ? "
+                "FROM entries WHERE status IN ('spent', 'over_budget', 'unapproved') AND created_at >= ? "
                 "GROUP BY recipient ORDER BY total DESC LIMIT 5",
                 (start,),
             ).fetchall()
@@ -254,6 +254,10 @@ class Ledger:
                 "ORDER BY created_at DESC, rowid DESC LIMIT ?",
                 (start, max(1, min(int(limit), 50))),
             ).fetchall()
+            status_rows = conn.execute(
+                "SELECT status, COUNT(*) AS count FROM entries WHERE created_at >= ? GROUP BY status",
+                (start,),
+            ).fetchall()
         return {
             "period": (period or "today").lower(),
             "start": start,
@@ -261,5 +265,6 @@ class Ledger:
             "count": int(total["count"] or 0),
             "top_recipients": [dict(row) for row in top],
             "decisions": {row["action"]: row["count"] for row in decisions},
+            "status_counts": {row["status"]: row["count"] for row in status_rows},
             "recent": [dict(row) for row in recent],
         }

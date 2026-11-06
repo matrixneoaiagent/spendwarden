@@ -44,8 +44,9 @@ SPEND_RECORD = {
     "description": (
         "Record a payment that actually succeeded in the SpendWarden ledger, after the money moved. "
         "Idempotent on payment_id or tx_hash: retrying after a timeout will not double-count. "
-        "If the policy says ask, call again with approved=true only after a human confirms. "
-        "This does not send funds; it records a spend and returns a receipt."
+        "Records what happened even if the payment violated policy: the entry is flagged over_budget "
+        "or unapproved, and still counts toward the budget. If the policy says ask, set approved=true "
+        "only after a human confirms. This does not send funds; it records a spend and returns a receipt."
     ),
     "parameters": {
         "type": "object",

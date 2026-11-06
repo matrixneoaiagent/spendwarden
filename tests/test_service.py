@@ -73,13 +73,26 @@ class ServiceTests(unittest.TestCase):
         self.assertFalse(result["ok"])
         self.assertEqual(result["error"], "idempotency_key_required")
 
-    def test_record_requires_approval(self):
+    def test_record_without_approval_is_flagged(self):
         args = dict(self.args, amount_usd=0.75, payment_id="pay-2")
         result = json.loads(self.service.tool_record(args))
-        self.assertFalse(result["ok"])
-        self.assertEqual(result["error"], "approval_required")
-        approved = json.loads(self.service.tool_record(dict(args, approved=True)))
+        self.assertTrue(result["ok"])
+        self.assertEqual(result["status"], "unapproved")
+        self.assertIn("without approval", result["warning"])
+        self.assertEqual(result["spent"]["today_usd"], 0.75)
+        approved = json.loads(
+            self.service.tool_record(dict(args, payment_id="pay-2b", approved=True))
+        )
         self.assertTrue(approved["ok"])
+        self.assertEqual(approved["status"], "spent")
+
+    def test_record_over_budget_is_flagged(self):
+        args = dict(self.args, amount_usd=3.0, payment_id="pay-over")
+        result = json.loads(self.service.tool_record(args))
+        self.assertTrue(result["ok"])
+        self.assertEqual(result["status"], "over_budget")
+        self.assertIn("policy block", result["warning"])
+        self.assertEqual(result["spent"]["today_usd"], 3.0)
 
     def test_report(self):
         self.service.tool_record(dict(self.args, payment_id="pay-3"))
@@ -87,6 +100,7 @@ class ServiceTests(unittest.TestCase):
         self.assertTrue(result["ok"])
         self.assertEqual(result["total_usd"], 0.25)
         self.assertEqual(result["count"], 1)
+        self.assertEqual(result["status_counts"], {"spent": 1})
         self.assertEqual(result["top_recipients"][0]["recipient"], PAY_TO)
 
     def test_hook_blocks_in_enforce(self):

@@ -19,7 +19,7 @@ agent → spend_check → allow / ask / block
 | Surface | What it does |
 |---|---|
 | `spend_check` | Evaluates a proposed payment against the policy before any money moves. Returns `allow`, `ask` or `block`, the reasons, and the remaining budget. |
-| `spend_record` | Records a payment that actually succeeded. Idempotent on `payment_id` or `tx_hash`, so a retry after a timeout cannot double-count. |
+| `spend_record` | Records a payment that actually succeeded, even if it violated policy (the entry is flagged `over_budget` or `unapproved` and still counts). Idempotent on `payment_id` or `tx_hash`, so a retry after a timeout cannot double-count. |
 | `spend_report` | Daily/weekly/monthly totals, remaining budget, top recipients, blocked/approval counts, and recent receipts. |
 | `x402_inspect` | Decodes a `PAYMENT-REQUIRED` challenge or a signed `X-PAYMENT` payload, normalizes the terms, and runs the same policy check. It never signs. |
 | `pre_tool_call` hook | Catches payment-shaped tool calls (`wallet_*`, `x402_*`, `*pay*`, `*transfer*`, `*swap*`, `*bridge*`, `*checkout*`, `*purchase*`, `*send*`, `*withdraw*`, `*deposit*`, `*invoice*`, `*tip*`, `*buy*`) and a small set of high-risk shell commands. In `enforce` mode it blocks hard violations and escalates uncertain ones to Hermes's approval gate. |
@@ -151,7 +151,7 @@ It can also inspect an already-signed `X-PAYMENT` payload and refuse an expired 
 
 All state is local, in `$HERMES_HOME/plugin-data/spendwarden/ledger.db` (SQLite, DELETE journal):
 
-- `entries` — one row per recorded payment. Amounts are integer micro-USD. `payment_id` is unique, which is the idempotency guarantee.
+- `entries` — one row per recorded payment. Amounts are integer micro-USD. `payment_id` is unique, which is the idempotency guarantee. `status` is `spent`, `over_budget`, or `unapproved`; every status counts toward the budget, so a policy violation cannot disappear from the totals.
 - `events` — every check, block, approval, and x402 inspection, with reasons and a receipt code.
 
 Nothing is sent anywhere. There is no telemetry.
