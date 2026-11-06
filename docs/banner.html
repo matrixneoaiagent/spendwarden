@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<style>
+  :root { --ink:#0b0b0d; --cream:#f4ebdd; --muted:#a49b8d; --coral:#ff5a3c; --lime:#d8ff3e; --line:#2a2a32; }
+  * { box-sizing: border-box; }
+  html, body { margin:0; width:1200px; height:630px; overflow:hidden; background:var(--ink); color:var(--cream); font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  body { background: radial-gradient(120% 90% at 50% -10%, #1d1d24 0%, #0b0b0d 60%); }
+  .wrap { padding: 64px 72px; height:100%; display:flex; flex-direction:column; }
+  .kicker { font: 12px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing:.2em; text-transform:uppercase; color:var(--lime); }
+  h1 { font: 800 96px/.9 ui-sans-serif, system-ui, sans-serif; letter-spacing:-.06em; margin: 18px 0 14px; }
+  h1 span { color:var(--coral); }
+  .tag { font-size: 30px; line-height:1.2; color:#e2d8c9; max-width: 760px; margin:0; letter-spacing:-.01em; }
+  .row { display:flex; gap:16px; margin-top:auto; align-items:stretch; }
+  .card { background: linear-gradient(145deg,#17171d,#111115); border:1px solid var(--line); border-radius:18px; padding:18px 20px; flex:1; }
+  .card .label { font: 11px/1 ui-monospace, monospace; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
+  .card .value { font: 700 28px/1.1 ui-monospace, monospace; margin-top:10px; }
+  .green { color:var(--lime); } .red { color:var(--coral); } .yellow { color:#ffcf5a; }
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .foot { margin-top:18px; font: 11px/1.4 ui-monospace, monospace; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="kicker">Hermes Agent plugin · payments · safety · x402</div>
+  <h1>Spend<span>Warden</span></h1>
+  <p class="tag">Your agent can buy things.<br>It can't surprise you.</p>
+  <div class="row">
+    <div class="card"><div class="label">policy</div><div class="value">$2.00 / day</div><div class="label" style="margin-top:10px">$1.00 per call · approval at $0.30</div></div>
+    <div class="card"><div class="label">attempt</div><div class="value red">$5.00 → BLOCK</div><div class="label" style="margin-top:10px">before the wallet tool runs</div></div>
+    <div class="card"><div class="label">ledger</div><div class="value green">SW-7F3A2C</div><div class="label" style="margin-top:10px">idempotent receipt · no key · no network</div></div>
+  </div>
+  <div class="foot">spend_check · spend_record · spend_report · x402_inspect · pre_tool_call</div>
+</div>
+</body>
+</html>

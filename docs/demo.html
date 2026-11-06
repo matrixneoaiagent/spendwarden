@@ -1,0 +1,43 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+body{margin:0;background:#0b0b0d;display:flex;align-items:center;justify-content:center;height:980px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.win{width:1120px;background:#111115;border:1px solid #2a2a32;border-radius:16px;overflow:hidden;box-shadow:0 30px 80px #0008}
+.bar{height:38px;background:#17171d;display:flex;align-items:center;gap:8px;padding:0 14px;border-bottom:1px solid #2a2a32}
+.dot{width:11px;height:11px;border-radius:50%}
+.t{color:#a49b8d;font-size:12px;margin-left:10px}
+pre{margin:0;padding:20px 24px;color:#f4ebdd;font-size:13.5px;line-height:1.5;white-space:pre-wrap}
+</style></head><body><div class="win"><div class="bar"><div class="dot" style="background:#ff5a3c"></div><div class="dot" style="background:#ffcf5a"></div><div class="dot" style="background:#d8ff3e"></div><div class="t">spendwarden — blocked, approved, recorded, decoded</div></div><pre>SpendWarden · enforce mode · $2/day · $1/call · approval at $0.30
+
+2. The agent tries a $5.00 transfer — blocked before the wallet runs
+────────────────────────────────────────────────────────────────────
+  hook says: BLOCK
+  SpendWarden blocked $5.00 in USDC on base to
+  0x1111111111111111111111111111111111111111. Reasons: $5.00 exceeds the
+  $1.00 per-call limit; daily budget: $0.00 spent + $5.00 would exceed
+  $2.00. Adjust the policy or make this payment in a separate,
+  explicitly approved step.
+
+────────────────────────────────────────────────────────────────────
+3. A $0.75 payment is inside the cap but above the approval line
+────────────────────────────────────────────────────────────────────
+  hook says: APPROVE
+  SpendWarden needs approval for $0.75 in USDC on base to 0x1111111111111111111111111111111111111111. Reasons: $0.75 is at or above the $0.30 approval threshold. Approve this call only if the recipient and amount are what you expect.
+
+────────────────────────────────────────────────────────────────────
+4. The $0.25 payment succeeds; the ledger records it once
+────────────────────────────────────────────────────────────────────
+  receipt  : SW-D66A8A
+  duplicate: False
+  today    : $0.25 spent
+  retry    : duplicate=True — the ledger did not double-count
+
+────────────────────────────────────────────────────────────────────
+5. Decode an x402 challenge without signing anything
+────────────────────────────────────────────────────────────────────
+  network  : base
+  asset    : USDC (250000 atomic)
+  amount   : $0.25
+  payTo    : 0x1111111111111111111111111111111111111111
+  resource : https://api.example.com/market-data
+  decision : ALLOW  (SW-03B169)
+
+────────────────────────────────────────────────────────────────────</pre></div></body></html>

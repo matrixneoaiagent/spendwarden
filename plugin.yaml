@@ -1,0 +1,100 @@
+name: spendwarden
+version: 0.1.0
+manifest_version: 2
+api_version: 1
+requires_hermes: ">=0.22.2"
+description: >-
+  A spend policy firewall and ledger for agents that can move money. SpendWarden
+  checks every payment-shaped tool call against a daily, monthly, per-call and
+  recipient/asset/network policy; blocks hard violations, escalates uncertain
+  ones to Hermes's approval gate, decodes x402 challenges without signing, and
+  records idempotent receipts in a local SQLite ledger. It never holds a key,
+  signs, or sends a transaction.
+author: OpenCode Audit
+license: MIT
+homepage: https://github.com/opencode-audit/spendwarden
+tags:
+  - payments
+  - safety
+  - x402
+  - budget
+  - ledger
+provides_tools:
+  - spend_check
+  - spend_record
+  - spend_report
+  - x402_inspect
+provides_hooks:
+  - pre_tool_call
+config_schema:
+  mode:
+    type: str
+    choices: [observe, enforce]
+    default: observe
+    label: Enforcement mode
+    description: "observe logs payment-shaped calls; enforce blocks or escalates them."
+  daily_limit_usd:
+    type: float
+    default: 5.0
+    label: Daily limit (USD)
+    description: "Maximum total spend per UTC day."
+  monthly_limit_usd:
+    type: float
+    default: 50.0
+    label: Monthly limit (USD)
+    description: "Maximum total spend per UTC month."
+  per_call_limit_usd:
+    type: float
+    default: 2.0
+    label: Per-call limit (USD)
+    description: "Hard cap for one payment."
+  approval_threshold_usd:
+    type: float
+    default: 0.5
+    label: Approval threshold (USD)
+    description: "Payments at or above this amount go to Hermes's approval gate."
+  unknown_recipient_action:
+    type: str
+    choices: [ask, block]
+    default: ask
+    label: Unknown recipient
+    description: "What to do when a recipient is not on the allowlist."
+  recipient_allowlist:
+    type: list
+    default: []
+    label: Recipient allowlist
+    description: "Exact addresses or globs. Empty means every recipient needs review."
+  asset_allowlist:
+    type: list
+    default: [USDC, USDT, OUSD]
+    label: Asset allowlist
+    description: "Symbols or token addresses. Anything else is blocked."
+  network_allowlist:
+    type: list
+    default: [base, base-sepolia, tempo, bsc, near, solana, celo, ethereum, arbitrum, optimism, polygon]
+    label: Network allowlist
+    description: "Chain names or ids. Anything else is blocked."
+  watch_terminal:
+    type: bool
+    default: true
+    label: Watch terminal commands
+    description: "Recognise cast send, solana transfer, bitcoin-cli sendtoaddress, near call --deposit, and curl with X-PAYMENT."
+  watched_tools:
+    type: list
+    default:
+      - "wallet_*"
+      - "x402_*"
+      - "*pay*"
+      - "*transfer*"
+      - "*swap*"
+      - "*bridge*"
+      - "*checkout*"
+      - "*purchase*"
+      - "spend_*"
+    label: Watched tool patterns
+    description: "Glob patterns for tools whose arguments should be treated as payments."
+  fail_closed:
+    type: bool
+    default: false
+    label: Fail closed
+    description: "Block payment-shaped calls when the policy check itself errors."

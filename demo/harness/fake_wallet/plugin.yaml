@@ -1,0 +1,5 @@
+name: fake-wallet
+version: 0.0.1
+description: Demo-only wallet tool used to prove SpendWarden blocks before execution. It never sends funds.
+provides_tools:
+  - wallet_send
