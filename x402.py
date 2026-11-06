@@ -18,7 +18,6 @@ import base64
 import binascii
 import json
 import time
-from decimal import Decimal
 from typing import Any
 from urllib.parse import urlparse
 

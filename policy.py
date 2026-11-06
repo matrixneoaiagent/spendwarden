@@ -457,7 +457,6 @@ def detect_intent(
     )
 
 
-_CAST_VALUE_RE = re.compile(r"\bcast\s+send\b(?P<body>.*?)(?:$|\n)", re.DOTALL)
 _CAST_VALUE_FLAG_RE = re.compile(r"--value\s+(?P<value>0x[0-9a-fA-F]+|\d+)")
 _CAST_TO_RE = re.compile(r"\bcast\s+send\s+(?P<to>0x[0-9a-fA-F]{40})")
 _TRANSFER_CALL_RE = re.compile(
