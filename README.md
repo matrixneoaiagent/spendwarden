@@ -22,7 +22,7 @@ agent → spend_check → allow / ask / block
 | `spend_record` | Records a payment that actually succeeded. Idempotent on `payment_id` or `tx_hash`, so a retry after a timeout cannot double-count. |
 | `spend_report` | Daily/weekly/monthly totals, remaining budget, top recipients, blocked/approval counts, and recent receipts. |
 | `x402_inspect` | Decodes a `PAYMENT-REQUIRED` challenge or a signed `X-PAYMENT` payload, normalizes the terms, and runs the same policy check. It never signs. |
-| `pre_tool_call` hook | Catches payment-shaped tool calls (`wallet_*`, `x402_*`, `*pay*`, `*transfer*`, `*swap*`, `*bridge*`, `*checkout*`, `*purchase*`) and a small set of high-risk shell commands. In `enforce` mode it blocks hard violations and escalates uncertain ones to Hermes's approval gate. |
+| `pre_tool_call` hook | Catches payment-shaped tool calls (`wallet_*`, `x402_*`, `*pay*`, `*transfer*`, `*swap*`, `*bridge*`, `*checkout*`, `*purchase*`, `*send*`, `*withdraw*`, `*deposit*`, `*invoice*`, `*tip*`, `*buy*`) and a small set of high-risk shell commands. In `enforce` mode it blocks hard violations and escalates uncertain ones to Hermes's approval gate. |
 | `/spend` | A one-line status command for the current chat. |
 
 ## Why a plugin, not a prompt

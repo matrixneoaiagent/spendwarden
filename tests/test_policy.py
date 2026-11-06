@@ -128,6 +128,24 @@ class PolicyTests(unittest.TestCase):
         self.assertEqual(intent.amount_usd, Decimal("0.250000"))
         self.assertEqual(intent.recipient, "0x1111111111111111111111111111111111111111")
 
+    def test_detect_nested_mcp_args(self):
+        intent = detect_intent(
+            "mcp__payments__create",
+            {"params": {"to": "0x1111111111111111111111111111111111111111", "amount": "0.25", "asset": "USDC", "network": "base"}},
+            make_policy(),
+        )
+        self.assertIsNotNone(intent)
+        self.assertEqual(intent.amount_usd, Decimal("0.250000"))
+        self.assertEqual(intent.recipient, "0x1111111111111111111111111111111111111111")
+
+    def test_detect_send_tool_without_explicit_pay_name(self):
+        intent = detect_intent(
+            "send_usdc",
+            {"to": "0x1111111111111111111111111111111111111111", "amount": "0.25", "asset": "USDC"},
+            make_policy(),
+        )
+        self.assertIsNotNone(intent)
+
     def test_detect_ignores_unrelated_tool(self):
         intent = detect_intent("read_file", {"path": "/tmp/x", "amount": 1}, make_policy())
         self.assertIsNone(intent)

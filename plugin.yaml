@@ -90,6 +90,12 @@ config_schema:
       - "*bridge*"
       - "*checkout*"
       - "*purchase*"
+      - "*send*"
+      - "*withdraw*"
+      - "*deposit*"
+      - "*invoice*"
+      - "*tip*"
+      - "*buy*"
       - "spend_*"
     label: Watched tool patterns
     description: "Glob patterns for tools whose arguments should be treated as payments."

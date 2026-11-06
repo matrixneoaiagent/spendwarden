@@ -73,11 +73,17 @@ DEFAULT_WATCHED_TOOLS = (
     "*bridge*",
     "*checkout*",
     "*purchase*",
+    "*send*",
+    "*withdraw*",
+    "*deposit*",
+    "*invoice*",
+    "*tip*",
+    "*buy*",
     "spend_*",
 )
 OWN_TOOLS = {"spend_check", "spend_record", "spend_report", "x402_inspect"}
 
-_RECIPIENT_KEYS = ("payTo", "pay_to", "recipient", "destination", "to_address")
+_RECIPIENT_KEYS = ("payTo", "pay_to", "recipient", "destination", "to_address", "to")
 _AMOUNT_KEYS = (
     "amount_usd",
     "usd_amount",
@@ -360,6 +366,21 @@ def evaluate(
     return Decision("allow", ["within policy"], receipt)
 
 
+def _find_nested(args: Any, keys: tuple[str, ...], depth: int = 0) -> tuple[str, Any]:
+    """Find the first matching key in a nested argument object (MCP-style)."""
+    if depth > 3 or not isinstance(args, dict):
+        return "", None
+    for key in keys:
+        if key in args and args[key] not in (None, ""):
+            return key, args[key]
+    for value in args.values():
+        if isinstance(value, dict):
+            found_key, found_value = _find_nested(value, keys, depth + 1)
+            if found_key:
+                return found_key, found_value
+    return "", None
+
+
 def detect_intent(
     tool_name: str,
     args: dict[str, Any],
@@ -379,37 +400,19 @@ def detect_intent(
     if not isinstance(args, dict):
         return None
 
-    recipient = ""
-    for key in _RECIPIENT_KEYS:
-        if args.get(key):
-            recipient = str(args[key])
-            break
+    _, recipient_value = _find_nested(args, _RECIPIENT_KEYS)
+    recipient = str(recipient_value or "")
 
-    amount_key = ""
-    amount_value: Any = None
-    for key in _AMOUNT_KEYS:
-        if key in args and args[key] not in (None, ""):
-            amount_key = key
-            amount_value = args[key]
-            break
+    amount_key, amount_value = _find_nested(args, _AMOUNT_KEYS)
 
-    asset = ""
-    for key in ("asset", "currency", "token", "symbol"):
-        if args.get(key):
-            asset = str(args[key])
-            break
+    _, asset_value = _find_nested(args, ("asset", "currency", "token", "symbol"))
+    asset = str(asset_value or "")
 
-    network = ""
-    for key in ("network", "chain", "chain_id"):
-        if args.get(key):
-            network = str(args[key])
-            break
+    _, network_value = _find_nested(args, ("network", "chain", "chain_id"))
+    network = str(network_value or "")
 
-    purpose = ""
-    for key in ("purpose", "description", "memo", "reason"):
-        if args.get(key):
-            purpose = str(args[key])
-            break
+    _, purpose_value = _find_nested(args, ("purpose", "description", "memo", "reason"))
+    purpose = str(purpose_value or "")
 
     looks_like_payment_tool = _matches(tool_name, policy.watched_tools)
     if not (recipient and amount_key) and not (looks_like_payment_tool and amount_key):
