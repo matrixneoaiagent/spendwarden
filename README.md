@@ -156,6 +156,20 @@ All state is local, in `$HERMES_HOME/plugin-data/spendwarden/ledger.db` (SQLite,
 
 Nothing is sent anywhere. There is no telemetry.
 
+## How it differs from adjacent plugins
+
+- **vet402 / toll** look up whether a URL, coin, or transaction is reputable.
+  SpendWarden enforces the user's own budget and allowlist and records the
+  payment; it calls no reputation service.
+- **usage-guard** caps a subscription's model usage. SpendWarden caps payments
+  the agent makes with a wallet or an x402 client.
+- **openrouter-spend** accounts for LLM API cost. SpendWarden accounts for
+  x402, on-chain, checkout, and other payment-shaped tool calls, and blocks
+  them before they run.
+- **airlock** taints a session after it reads untrusted content. SpendWarden is
+  a spend-specific check that runs on every payment-shaped call, whether or not
+  the session is tainted.
+
 ## What it deliberately does not do
 
 - It does not hold a private key, sign a transaction, or send funds.
