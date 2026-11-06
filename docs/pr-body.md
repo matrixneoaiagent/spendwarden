@@ -21,6 +21,7 @@ Python check runs before a payment-shaped tool executes.
   `bitcoin-cli sendtoaddress`, `near call --deposit`, and `curl` with
   `X-PAYMENT`.
 - `/spend` — a one-line status command.
+- `hermes spendwarden report|policy|receipts` — the same data from the terminal.
 
 In `enforce` mode a hard violation returns `{"action": "block"}`; an uncertain
 payment returns `{"action": "approve"}` and goes through Hermes's own approval
