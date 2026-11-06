@@ -1,0 +1,33 @@
+# Copy this file to plugin-catalog/spendwarden.yaml in a fork of
+# NousResearch/hermes-agent, replace every <owner> placeholder, and pin the
+# exact 40-character commit SHA. Then run:
+#   hermes plugins validate /path/to/spendwarden --install-deps
+#   hermes plugins validate ... (catalog CI runs the same checks)
+#
+# The description must disclose behaviour a user would want to know before
+# installing: the pre_tool_call hook can block or escalate payment-shaped tool
+# calls, the plugin writes a local SQLite ledger, it makes no network calls,
+# and it holds no credentials.
+name: spendwarden
+repo: https://github.com/<owner>/spendwarden
+sha: ebd4c3c8b606e23c67b4b657b1971df99ddad6f0
+version: "0.1.0"
+description: "A spend policy firewall and local ledger for Hermes agents that can move money. A pre_tool_call hook checks payment-shaped tool calls against daily, monthly and per-call USD caps, recipient/asset/network allowlists and an approval threshold; in enforce mode it blocks hard violations and escalates uncertain ones to Hermes's own approval gate. Four tools add spend_check, idempotent spend_record receipts, spend_report totals, and x402_inspect (decodes PAYMENT-REQUIRED / X-PAYMENT without signing). State is a local SQLite ledger under the plugin data directory; no network calls, no credentials, no key handling, no transaction signing. Observe mode logs only; enforce mode is opt-in. Terminal recognition covers cast send, solana transfer, bitcoin-cli sendtoaddress, near call --deposit and curl with X-PAYMENT."
+maintainer: <owner>
+tier: community
+category: tools
+requires_hermes: ">=0.22.2"
+docs_url: https://github.com/<owner>/spendwarden#readme
+image: https://raw.githubusercontent.com/<owner>/spendwarden/ebd4c3c8b606e23c67b4b657b1971df99ddad6f0/docs/banner.png
+screenshots:
+  - https://raw.githubusercontent.com/<owner>/spendwarden/ebd4c3c8b606e23c67b4b657b1971df99ddad6f0/docs/demo.png
+capabilities:
+  provides_tools:
+    - spend_check
+    - spend_record
+    - spend_report
+    - x402_inspect
+  provides_hooks:
+    - pre_tool_call
+  provides_middleware: []
+  requires_env: []
