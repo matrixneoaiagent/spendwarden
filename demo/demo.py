@@ -40,8 +40,14 @@ def line(text: str = "") -> None:
     print(text, flush=True)
 
 
+VIDEO = False
+
+
 def step(number: int, title: str, pause: float) -> None:
-    line()
+    if VIDEO:
+        print("\033[2J\033[H", end="")
+    else:
+        line()
     line(f"{CYAN}{'─' * 68}{RESET}")
     line(f"{BOLD}{number}. {title}{RESET}")
     line(f"{CYAN}{'─' * 68}{RESET}")
@@ -62,8 +68,11 @@ def show_decision(result: dict, pause: float) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--fast", action="store_true", help="no pauses (CI)")
+    parser.add_argument("--video", action="store_true", help="clear between steps for recording")
     args = parser.parse_args()
-    pause = 0.0 if args.fast else 0.7
+    global VIDEO
+    VIDEO = args.video
+    pause = 0.0 if args.fast else (1.2 if args.video else 0.7)
 
     tmp = tempfile.TemporaryDirectory()
     ledger = Ledger(Path(tmp.name) / "ledger.db")
