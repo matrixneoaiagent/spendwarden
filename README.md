@@ -42,14 +42,14 @@ The policy is intentionally boring:
 ## Install
 
 ```bash
-hermes plugins install opencode-audit/spendwarden
+hermes plugins install matrixneoaiagent/spendwarden
 hermes plugins enable spendwarden
 ```
 
 Or, from a checkout:
 
 ```bash
-git clone https://github.com/opencode-audit/spendwarden
+git clone https://github.com/matrixneoaiagent/spendwarden
 hermes plugins install ./spendwarden --enable
 ```
 
