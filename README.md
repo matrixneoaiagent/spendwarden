@@ -2,6 +2,8 @@
 
 **Your agent can buy things. It can't surprise you.**
 
+**Status:** the plugin catalog entry is merged into [`NousResearch/hermes-agent`](https://github.com/NousResearch/hermes-agent/pull/151303) (PR #151303, merge commit `75d72af`), pinned at `fe23b59`. Demo: [48-second X post](https://x.com/i_am_ahero/status/2118732352620794118).
+
 SpendWarden is a Hermes Agent plugin that puts a deterministic spending policy in front of every payment-shaped tool call and keeps an idempotent local ledger of what happened.
 
 It is built for the moment an agent stops being a chatbot and starts holding a wallet: paying for an x402 API, swapping tokens, bridging gas, or checking out with a card. A prompt that says "don't spend more than $5" is a suggestion. SpendWarden is a check that runs before the tool does.
