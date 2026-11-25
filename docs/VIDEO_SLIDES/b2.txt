@@ -1,0 +1,5 @@
+Agents can escalate spend and tool use faster than a human can review.
+
+Prompt-level rules are not a boundary: split calls, races and aliased arguments can slip through.
+
+We test whether a policy layer still holds when the swarm adapts.

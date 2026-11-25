@@ -1,0 +1,9 @@
+Capability boundary (no generic vendor_settle).
+
+Atomic reservation for concurrent calls.
+
+Per-agent and per-recipient exposure.
+
+Fail-closed parsing of tool arguments.
+
+Closes all three probes. Cost: 1/30 honest false positive. Residual attack spend is the explicit $2/agent/recipient allowance.

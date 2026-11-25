@@ -1,0 +1,6 @@
+Guardrail        Executed   Attack    Contained   Honest   Over cap   Unledgered
+None             $25.90     $20.86    0.0%        30/30    $15.90     —
+SpendWarden      $12.96     $11.00    47.3%       18/30    $2.96      $3.00
+Mediated         $8.72      $4.08     80.4%       29/30    $0.00      $0.00
+
+Same 64-call script; results/ is generated, not hand-written.

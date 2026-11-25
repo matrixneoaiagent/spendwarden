@@ -1,0 +1,6 @@
+Self-improving systems will route around rules that are only text.
+
+The boundary must be enforced where the money moves, and the test must be reproducible.
+
+Limitations: mock USDC, frozen script, one policy.
+Next: adaptive attacker, real x402, multi-day horizon.

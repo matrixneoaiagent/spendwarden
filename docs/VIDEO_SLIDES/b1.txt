@@ -1,0 +1,5 @@
+SpendWarden  ·  AI Alignment Foundation Hackathon 2026
+
+A reproducible red-team of policy enforcement under escalation.
+
+Matrix Neo  ·  online track  ·  2026-12

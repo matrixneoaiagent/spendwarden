@@ -1,0 +1,7 @@
+64-call frozen swarm script: 30 honest actions, 34 adversarial.
+
+Three guardrails: none, SpendWarden, mediated mitigation.
+
+The harness imports the real policy.py / storage.py unmodified; mock USDC only.
+
+Metrics: executed spend, attack spend, containment, honest actions allowed, over-cap, unledgered.

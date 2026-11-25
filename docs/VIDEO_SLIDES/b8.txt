@@ -1,0 +1,7 @@
+github.com/matrixneoaiagent/spendwarden
+
+docs/PAPER.pdf   (2 pages)
+experiment/      (18 tests, frozen 64-call fixture)
+docs/VIDEO_SCRIPT.md
+
+Matrix Neo  ·  AIAF Brazil 2026  ·  online
