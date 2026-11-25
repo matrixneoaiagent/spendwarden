@@ -12,7 +12,7 @@ description: >-
   signs, or sends a transaction.
 author: OpenCode Audit
 license: MIT
-homepage: https://github.com/opencode-audit/spendwarden
+homepage: https://github.com/matrixneoaiagent/spendwarden
 tags:
   - payments
   - safety
