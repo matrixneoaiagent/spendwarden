@@ -20,8 +20,7 @@ That works for one agent. I wanted to know whether it works for a swarm.
 
 **[0:25 — show the six-agent diagram / fixture]**
 
-So I attacked SpendWarden, an open-source spend firewall I built before this
-hackathon. Six mock agents share one wallet. Four do honest work. Two are
+So I attacked SpendWarden, an open-source spend firewall I maintain. Six mock agents share one wallet. Four do honest work. Two are
 compromised, and they escalate: they blend in, split payments just under the
 approval threshold, race each other, and then use a renamed tool.
 
