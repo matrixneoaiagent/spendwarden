@@ -79,9 +79,8 @@ policy is a second layer. The mediator never sees scoring labels.
 | Race, 6 × $0.45, $0.90 left | $2.70 | $2.70; total $11.80, **+$1.80 over cap** | $0.90; total $10.00 |
 | Alias, 1 × $1.50 renamed | $1.50 | $1.50, **$1.50 unledgered** | $0.00 |
 
-**What worked.** Both $1.99 attempts were escalated and neither executed. The
-allowlist and asset/network checks held. The daily cap bounded sequential
-ledgered spend at $9.96.
+**What worked.** Both $1.99 attempts were escalated and neither executed, and
+the daily cap bounded sequential ledgered spend at $9.96.
 
 **What did not.** (1) *Splitting.* 28 payments of $0.45–$0.49 produced zero
 approval prompts; 16 executed, moving $7.60 with no human decision. The cap
@@ -139,7 +138,8 @@ identity creation.
 Rule-based agents, one policy, one fixture, six agents, one day, no chain
 latency. The ladder is ours and frozen, not adaptive. `ask` = denial, so
 interactive approval and fatigue are untested. The mediator is a prototype, not
-integrated. Rotation is analysed, not measured.
+integrated, and its reservation lock is single-process; atomicity is modelled,
+not stress-tested across processes. Rotation is analysed, not measured.
 
 ## 8. Why this matters for RSI
 

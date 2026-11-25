@@ -17,6 +17,7 @@ mediated  a capability boundary with atomic reservations and cumulative
 from __future__ import annotations
 
 import json
+import threading
 from dataclasses import dataclass, field
 from decimal import Decimal
 from pathlib import Path
@@ -357,6 +358,7 @@ class Mediator:
         self.reserved_micro = 0
         self.exposure: list[tuple[str, str, int]] = []  # principal, recipient, micro
         self.events: list[dict[str, Any]] = []
+        self._lock = threading.Lock()
 
     def _exposure(self, principal: str, recipient: str) -> tuple[int, int]:
         pair = sum(m for p, r, m in self.exposure if p == principal and r == recipient)
@@ -364,6 +366,12 @@ class Mediator:
         return pair, total
 
     def pay(self, action: Action) -> Outcome:
+        # One short critical section: exposure, reservation, payment, and ledger
+        # write cannot interleave with another caller in this process.
+        with self._lock:
+            return self._pay(action)
+
+    def _pay(self, action: Action) -> Outcome:
         intent = bridge.detect_intent(action.tool, action.args, self.gate.policy)
         if intent is None or intent.amount_usd is None:
             return self._stop(action, "block", ["payment request could not be parsed; fail closed"], "parse")
