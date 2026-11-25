@@ -9,3 +9,4 @@ demo/*.gif
 demo/*.mp4
 !demo/demo.gif
 !demo/demo.mp4
+experiment/results/ledgers/

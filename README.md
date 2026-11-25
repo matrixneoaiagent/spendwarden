@@ -190,6 +190,35 @@ SpendWarden is designed for the ordinary failure modes of an agent with a wallet
 
 It is not a hardware wallet, a multisig, or a sandbox. Those are complementary.
 
+## AIAF Brazil 2026 — swarm red-team
+
+This repo is also the base for the online submission *Caps Are Not
+Capabilities* (AI Alignment Foundation Hackathon, Brazil 2026, Track 1:
+Swarms and multi-agent systems).
+
+The experiment asks whether a spend policy that is sound for one sequential
+agent still holds for a swarm that shares a budget, acts concurrently, and can
+write its own payment tools. It imports the plugin's real `policy.py` and
+`storage.py` unmodified and runs three controlled probes plus a 64-call swarm
+script against mock USDC. No keys, no network, no real funds.
+
+Headline: the approval gate caught every single payment at or above $0.50, but
+payment splitting across 28 calls produced zero prompts, a six-call race
+pushed the ledger $1.80 over its daily cap, and a renamed tool with `payee`/`sum_usd`
+arguments moved $1.50 with no ledger entry. A capability-mediator prototype
+closes all three in the probes and keeps 29/30 honest actions, versus 18/30
+under the pre-call hook alone.
+
+```bash
+python3 -m experiment.run                                  # results/results.json + RESULTS.md
+python3 -m unittest discover -s experiment/tests -v        # 18 experiment tests
+```
+
+- Paper: [`docs/PAPER.md`](docs/PAPER.md)
+- Video script: [`docs/VIDEO_SCRIPT.md`](docs/VIDEO_SCRIPT.md)
+- Event rules and submission checklist: [`docs/AIAF_RULES.md`](docs/AIAF_RULES.md)
+- Experiment details: [`experiment/README.md`](experiment/README.md)
+
 ## Development
 
 ```bash
