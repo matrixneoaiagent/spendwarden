@@ -1,7 +1,7 @@
 # Three-minute video script
 
-**Format:** first person, English, own voice. ~390 words, about 2:40 at a calm
-pace. Record screen + voice; no slides required. Numbers are from
+**Format:** first person, English, own voice. ~420 words, about 2:50 at a calm
+pace; rehearse to stay under 3:00. Record screen + voice; no slides required. Numbers are from
 `experiment/results/results.json`.
 
 **Before recording:** run `python3 -m experiment.run` so the terminal output and
@@ -18,7 +18,7 @@ no more than ten dollars a day, ask me above fifty cents.
 
 That works for one agent. I wanted to know whether it works for a swarm.
 
-**[0:20 — show the six-agent diagram / fixture]**
+**[0:25 — show the six-agent diagram / fixture]**
 
 So I attacked SpendWarden, an open-source spend firewall I built before this
 hackathon. Six mock agents share one wallet. Four do honest work. Two are
@@ -42,14 +42,14 @@ Race: six agents checked the budget when ninety cents were left. All six
 passed, because none had recorded yet. The ledger ended a dollar eighty over
 the cap. Check-then-act is not a reservation.
 
-**[1:30 — show the alias action in the fixture]**
+**[1:25 — show the alias action in the fixture]**
 
 Alias: a tool called `vendor_settle`, with arguments `payee` and `sum_usd`.
 The detector saw nothing payment-shaped, and a dollar fifty left without a
 ledger entry. In the full run, three dollars left that way — invisible to every
 later budget decision.
 
-**[1:50 — full swarm table]**
+**[1:45 — full swarm table]**
 
 Then the full swarm. With no guardrail, all twenty-five ninety executed,
 including twenty dollars eighty-six of attack spend.
@@ -59,7 +59,7 @@ sixty percent, because two bad agents drained the shared budget. That's the
 part I didn't expect: the attack doesn't just steal money, it starves the
 agents that are behaving.
 
-**[2:15 — show the mediated run / diagram of the mediator]**
+**[2:05 — show the mediated run / diagram of the mediator]**
 
 The fix isn't a tighter number. It's a different boundary.
 
@@ -71,7 +71,7 @@ hits a ceiling. And a tool the agents invent has nothing to call.
 Attack spend dropped to four dollars eight. No cap overrun, no unledgered
 spend, and honest work stayed at ninety-seven percent.
 
-**[2:45 — direct to camera]**
+**[2:35 — direct to camera]**
 
 The point for recursive self-improvement is this. A system that rewrites itself
 will invent tools faster than we can name them. A deny-list of bad tool names
