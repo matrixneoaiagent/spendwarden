@@ -1,6 +1,6 @@
 # SpendWarden swarm experiment — results
 
-Generated `2026-11-25T12:11:29Z` from commit `c72c7b3`, fixture `aiaf-swarm-v1` (sha256 `4fcc43a5902d8c49…`), Python 3.13.18, 64 tool calls.
+Generated `2026-11-25T12:12:20Z` from commit `b12bbab`, fixture `aiaf-swarm-v1` (sha256 `4fcc43a5902d8c49…`), Python 3.13.18, 64 tool calls.
 
 All figures are mock USDC on Base. No real funds, keys, or network calls. `ask` means the agent asked for human approval in an unattended run, so the payment did not proceed.
 
